@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hourly Production Dashboard</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <link rel="stylesheet" href="app.css" />
+  </head>
+
+  <body>
+    <div class="container">
+      <header>
+        <h1>Hourly Production Dashboard<br />Eastman New Energy Pvt. Ltd.</h1>
+      </header>
+
+      <div
+        id="noPlan"
+        class="alert alert-error"
+        style="display:<?= empty($plans) ? 'block' : 'none' ?>;"
+      >
+        No active plan found for selected Date + Shift.
+      </div>
+
+      <div
+        class="kpi-grid"
+        id="kpiSection"
+        style="display:<?= empty($plans) ? 'none' : 'grid' ?>;"
+      >
+        <div class="kpi-card date-time-card">
+          <div class="kpi-label">Date</div>
+          <div class="kpi-value" id="kDate">70</div>
+
+          <div class="kpi-label">Time</div>
+          <div class="kpi-value" id="kTime">35</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Line</div>
+          <div class="kpi-value" id="kLine">67</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Model</div>
+          <div class="kpi-value" id="kModel">12332</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">SFG Code</div>
+          <div class="kpi-value" id="kSfg">3424</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Total Plan</div>
+          <div class="kpi-value" id="kTotalPlan">90</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Total Actual</div>
+          <div class="kpi-value" id="kTotalActual">765</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Target UPH</div>
+          <div class="kpi-value" id="kTargetUph">098</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Actual UPH</div>
+          <div class="kpi-value" id="kActualUph">129</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">PDI</div>
+          <div class="kpi-value" id="kActualUph">843</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Packing</div>
+          <div class="kpi-value" id="kActualUph">3423</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">FQC Production</div>
+          <div class="kpi-value" id="kActualUph">3242</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Dispatch</div>
+          <div class="kpi-value" id="kActualUph">234</div>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table class="dash-table">
+          <thead>
+            <tr>
+              <th>Timings</th>
+              <th>UPH Target</th>
+              <th>Cell Sort</th>
+              <th>Laser Weld</th>
+              <th>BMS Mounting</th>
+              <th>FT</th>
+              <th>FQC</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+            <tr>
+              <td
+                colspan="12"
+                style="padding: 60px; font-size: 1.6rem; color: #64748b"
+              >
+                Loading production data...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <header>
+        <h1>Hourly Production Dashboard</h1>
+      </header>
+
+      <button class="theme-toggle" id="themeToggle">🌙 Dark Mode</button>
+
+      <h2 class="Chartheading">Actual 2025-26</h2>
+
+      <section class="chartSection">
+        <div class="chart-container">
+          <canvas id="barChart"></canvas>
+        </div>
+        <div class="chart-container">
+          <canvas id="lineChart"></canvas>
+        </div>
+      </section>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
