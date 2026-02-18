@@ -2,24 +2,30 @@
    STATE
 ========================================================== */
 
-let barChart = null;
-let lineChart = null;
+var barChart = null;
+var lineChart = null;
 
 /* ==========================================================
    PLAN FUNCTIONS
 ========================================================== */
 
 function reloadPlans() {
-    const d = document.getElementById("planDate")?.value;
-    const s = document.getElementById("shiftId")?.value;
+    var planDateEl = document.getElementById("planDate");
+    var shiftEl = document.getElementById("shiftId");
+
+    var d = planDateEl ? planDateEl.value : null;
+    var s = shiftEl ? shiftEl.value : null;
+
     if (!d || !s) return;
 
-    window.location.href = `?date=${encodeURIComponent(d)}&shift_id=${encodeURIComponent(s)}`;
+    window.location.href =
+        "?date=" + encodeURIComponent(d) +
+        "&shift_id=" + encodeURIComponent(s);
 }
 
 function setKpi(p) {
-    const map = {
-        kDate: `${p.PlanDate} (${p.ShiftName})`,
+    var map = {
+        kDate: p.PlanDate + " (" + p.ShiftName + ")",
         kTime: p.ServerTime,
         kLine: p.LineName,
         kModel: p.Model || "-",
@@ -30,54 +36,56 @@ function setKpi(p) {
         kActualUph: p.ActualUPH
     };
 
-    Object.entries(map).forEach(([id, value]) => {
-        const el = document.getElementById(id);
-        if (el) el.innerText = value;
+    Object.keys(map).forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) el.innerText = map[id];
     });
 }
 
-// tables
+/* ==========================================================
+   TABLE
+========================================================== */
 
 function buildRows(rows) {
-    const body = document.getElementById("tableBody");
+    var body = document.getElementById("tableBody");
     if (!body) return;
 
     body.innerHTML = "";
 
-    if (!rows?.length) {
-        body.innerHTML = `<tr><td colspan="6">No data</td></tr>`;
+    if (!rows || !rows.length) {
+        body.innerHTML = "<tr><td colspan='6'>No data</td></tr>";
         return;
     }
 
-    rows.forEach(r => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-      <td>${r.timing}</td>
-      <td>${r.uph_target}</td>
-      <td>${r["Cell Short"]}</td>
-      <td>${r["Laser Weld"]}</td>
-      <td>${r["BMS Mounting"]}</td>
-      <td>${r["FQC"]}</td>
-    `;
+    rows.forEach(function (r) {
+        var tr = document.createElement("tr");
+        tr.innerHTML =
+            "<td>" + r.timing + "</td>" +
+            "<td>" + r.uph_target + "</td>" +
+            "<td>" + r["Cell Short"] + "</td>" +
+            "<td>" + r["Laser Weld"] + "</td>" +
+            "<td>" + r["BMS Mounting"] + "</td>" +
+            "<td>" + r["FQC"] + "</td>";
         body.appendChild(tr);
     });
 }
 
-async function loadPlan(planId) {
-    try {
-        const res = await fetch(`?ajax=1&plan_id=${planId}`, { cache: "no-store" });
-        const js = await res.json();
-
-        if (!js.ok) throw new Error(js.msg);
-
-        setKpi(js.data.plan);
-        buildRows(js.data.rows);
-
-    } catch (err) {
-        console.error("Load plan error:", err);
-    }
+function loadPlan(planId) {
+    fetch("?ajax=1&plan_id=" + planId, { cache: "no-store" })
+        .then(function (res) { return res.json(); })
+        .then(function (js) {
+            if (!js.ok) return;
+            setKpi(js.data.plan);
+            buildRows(js.data.rows);
+        })
+        .catch(function (err) {
+            console.error("Load plan error:", err);
+        });
 }
 
+/* ==========================================================
+   UTILITIES
+========================================================== */
 
 function cssVar(name) {
     return getComputedStyle(document.documentElement)
@@ -86,25 +94,81 @@ function cssVar(name) {
 }
 
 function responsiveFont(base) {
-    const w = window.innerWidth;
+    var w = window.innerWidth;
     if (w > 1800) return base + 2;
     if (w > 1200) return base;
     if (w > 768) return base - 1;
     return base - 2;
 }
 
+/* ==========================================================
+   CHART DATA (Dummy)
+========================================================== */
 
-const barData = {
+var barData = {
     labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar"],
     values: [108, 371, 315, 47, 336, 67, 372, 146, 254, 223, 90, 100]
 };
 
-const lineData = {
+var lineData = {
     labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar"],
     values: [98, 320, 290, 60, 300, 80, 350, 130, 220, 200, 100, 120]
 };
 
+/* ==========================================================
+   COMMON CHART OPTIONS
+========================================================== */
 
+function getCommonChartOptions(yTitle) {
+    return {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: false,
+        plugins: {
+            legend: {
+                labels: {
+                    color: cssVar("--text"),
+                    font: { size: responsiveFont(12) }
+                }
+            },
+            datalabels: {
+                color: cssVar("--text"),
+                font: { size: responsiveFont(14) },
+                anchor: "end",
+                align: "top",
+                offset: 2,
+                clamp: true
+            }
+        },
+        scales: {
+            x: {
+                ticks: {
+                    color: cssVar("--text"),
+                    font: { size: responsiveFont(14) },
+                    maxRotation: 0,
+                    minRotation: 0
+                }
+            },
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    color: cssVar("--text"),
+                    font: { size: responsiveFont(14) }
+                },
+                title: {
+                    display: true,
+                    text: yTitle,
+                    color: cssVar("--text"),
+                    font: { size: responsiveFont(14) }
+                }
+            }
+        }
+    };
+}
+
+/* ==========================================================
+   BUILD CHART CONFIGS
+========================================================== */
 
 function buildBarChartConfig(data) {
     return {
@@ -118,8 +182,7 @@ function buildBarChartConfig(data) {
                 borderRadius: 4
             }]
         },
-        options: getCommonChartOptions("Hundred"),
-        plugins: [ChartDataLabels]
+        options: getCommonChartOptions("Hundred")
     };
 }
 
@@ -146,63 +209,12 @@ function buildLineChartConfig(data) {
 }
 
 /* ==========================================================
-   COMMON CHART OPTIONS
-========================================================== */
-
-function getCommonChartOptions(yTitle) {
-    return {
-        responsive: true,
-        maintainAspectRatio: false,
-        animation: false,
-        plugins: {
-            legend: {
-                labels: {
-                    color: cssVar("--text"),
-                    font: { size: responsiveFont(12) }
-                }
-            },
-            datalabels: {
-                color: cssVar("--text"),
-                font: { size: responsiveFont(16) },
-                anchor: "end",   // attach to end of bar
-                align: "top",    // place above bar
-                offset: 2,       // small gap from bar
-                clamp: true
-            }
-        },
-        scales: {
-            x: {
-                ticks: {
-                    color: cssVar("--text"),
-                    font: { size: responsiveFont(16) },
-                    maxRotation: 0,
-                    minRotation: 0
-                }
-            },
-            y: {
-                beginAtZero: true,
-                ticks: {
-                    color: cssVar("--text"),
-                    font: { size: responsiveFont(16) }
-                },
-                title: {
-                    display: true,
-                    text: yTitle,
-                    color: cssVar("--text"),
-                    font: { size: responsiveFont(16) },
-                }
-            }
-        }
-    };
-}
-
-/* ==========================================================
    INIT CHARTS
 ========================================================== */
 
 function initCharts() {
-    const barCtx = document.getElementById("barChart");
-    const lineCtx = document.getElementById("lineChart");
+    var barCtx = document.getElementById("barChart");
+    var lineCtx = document.getElementById("lineChart");
 
     if (!barCtx || !lineCtx) return;
 
@@ -214,46 +226,59 @@ function initCharts() {
    THEME HANDLING
 ========================================================== */
 
-function setupTheme() {
-    const toggleBtn = document.getElementById("themeToggle");
-    const saved = localStorage.getItem("dashboard-theme");
-
-    if (saved === "dark") {
-        document.documentElement.setAttribute("data-theme", "dark");
-        toggleBtn.textContent = "☀️ Light Mode";
-    }
-
-    toggleBtn.addEventListener("click", () => {
-        const isDark = document.documentElement.getAttribute("data-theme") === "dark";
-
-        document.documentElement.setAttribute("data-theme", isDark ? "" : "dark");
-        toggleBtn.textContent = isDark ? "🌙 Dark Mode" : "☀️ Light Mode";
-
-        localStorage.setItem("dashboard-theme", isDark ? "light" : "dark");
-
-        refreshCharts();
-    });
-}
-
-/* ==========================================================
-   REFRESH CHART COLORS (No Destroy)
-========================================================== */
-
 function refreshCharts() {
     if (!barChart || !lineChart) return;
 
-    barChart.options = getCommonChartOptions("Units Produced");
+    barChart.options = getCommonChartOptions("Hundred");
     lineChart.options = getCommonChartOptions("Efficiency %");
 
     barChart.update();
     lineChart.update();
 }
 
+function setupTheme() {
+    var toggleBtn = document.getElementById("themeToggle");
+    var saved = localStorage.getItem("dashboard-theme");
+
+    if (saved === "dark") {
+        document.documentElement.setAttribute("data-theme", "dark");
+        toggleBtn.innerText = "☀️ Light Mode";
+    }
+
+    toggleBtn.addEventListener("click", function () {
+        var isDark =
+            document.documentElement.getAttribute("data-theme") === "dark";
+
+        document.documentElement.setAttribute(
+            "data-theme",
+            isDark ? "" : "dark"
+        );
+
+        toggleBtn.innerText =
+            isDark ? "🌙 Dark Mode" : "☀️ Light Mode";
+
+        localStorage.setItem(
+            "dashboard-theme",
+            isDark ? "light" : "dark"
+        );
+
+        refreshCharts();
+    });
+}
+
+/* ==========================================================
+   REGISTER PLUGIN (IMPORTANT FOR LG)
+========================================================== */
+
+if (typeof ChartDataLabels !== "undefined") {
+    Chart.register(ChartDataLabels);
+}
+
 /* ==========================================================
    INIT
 ========================================================== */
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", function () {
     initCharts();
     setupTheme();
 });

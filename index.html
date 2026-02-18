@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hourly Production Dashboard</title>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+
     <script>
       (function () {
         const saved = localStorage.getItem("dashboard-theme");
@@ -114,6 +115,8 @@
                   margin-top: auto;
                   font-size: 1.6rem;
                   color: #56606d;
+                  height: 100%;
+                  width: 100%;
                 "
               >
                 Loading production data...
