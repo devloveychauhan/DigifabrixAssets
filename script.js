@@ -1,6 +1,4 @@
-/* ==========================================================
-   STATE
-========================================================== */
+
 
 var barChart = null;
 var lineChart = null;
@@ -140,6 +138,7 @@ function getCommonChartOptions(yTitle) {
                 clamp: true
             }
         },
+
         scales: {
             x: {
                 ticks: {
@@ -183,6 +182,7 @@ function buildBarChartConfig(data) {
             }]
         },
         options: getCommonChartOptions("Hundreds")
+
     };
 }
 
@@ -201,9 +201,10 @@ function buildLineChartConfig(data) {
                 pointRadius: 4,
                 borderWidth: 2,
                 tension: 0.35,
-                fill: true
+                fill: true,
             }]
         },
+
         options: getCommonChartOptions("Rework %")
     };
 }
