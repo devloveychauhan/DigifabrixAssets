@@ -192,7 +192,7 @@ function buildLineChartConfig(data) {
         data: {
             labels: data.labels,
             datasets: [{
-                label: "Rework Percentage(%) Trend",
+                label: "Rework Percentage Trend",
                 data: data.values,
                 borderColor: "#e63946",
                 backgroundColor: "rgba(230,57,70,0.15)",
