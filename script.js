@@ -176,13 +176,13 @@ function buildBarChartConfig(data) {
         data: {
             labels: data.labels,
             datasets: [{
-                label: "Monthly Output",
+                label: "Monthly Production Trend",
                 data: data.values,
                 backgroundColor: "#3b82f6",
                 borderRadius: 4
             }]
         },
-        options: getCommonChartOptions("Hundred")
+        options: getCommonChartOptions("Hundreds")
     };
 }
 
@@ -192,7 +192,7 @@ function buildLineChartConfig(data) {
         data: {
             labels: data.labels,
             datasets: [{
-                label: "Performance Trend",
+                label: "Rework Percentage(%) Trend",
                 data: data.values,
                 borderColor: "#e63946",
                 backgroundColor: "rgba(230,57,70,0.15)",
@@ -204,7 +204,7 @@ function buildLineChartConfig(data) {
                 fill: true
             }]
         },
-        options: getCommonChartOptions("Efficiency %")
+        options: getCommonChartOptions("Rework %")
     };
 }
 

@@ -86,7 +86,7 @@ color: var(--brand-orange);
 
 .kpi-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr); /* Forces 5 columns on every screen */
+  grid-template-columns: repeat(5, 1fr); /* Forces 5 columns on every screen */
   gap: 12px;
 }
 

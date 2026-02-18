@@ -61,11 +61,11 @@
         </div>
 
         <div class="kpi-card">
-          <div class="kpi-label">Total Plan</div>
+          <div class="kpi-label">Today - Total Plan</div>
           <div class="kpi-value" id="kTotalPlan">90</div>
         </div>
         <div class="kpi-card">
-          <div class="kpi-label">Total Actual</div>
+          <div class="kpi-label">Today - Total Actual</div>
           <div class="kpi-value" id="kTotalActual">765</div>
         </div>
         <div class="kpi-card">
@@ -77,19 +77,15 @@
           <div class="kpi-value" id="kActualUph">129</div>
         </div>
         <div class="kpi-card">
-          <div class="kpi-label">PDI</div>
+          <div class="kpi-label">MTD - PDI</div>
           <div class="kpi-value" id="kActualUph">843</div>
         </div>
         <div class="kpi-card">
-          <div class="kpi-label">Packing</div>
+          <div class="kpi-label">MTD - Packing</div>
           <div class="kpi-value" id="kActualUph">3423</div>
         </div>
         <div class="kpi-card">
-          <div class="kpi-label">FQC Production</div>
-          <div class="kpi-value" id="kActualUph">3242</div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-label">Dispatch</div>
+          <div class="kpi-label">MTD - Dispatch</div>
           <div class="kpi-value" id="kActualUph">234</div>
         </div>
       </div>
@@ -100,8 +96,8 @@
             <tr>
               <th>Timings</th>
               <th>UPH Target</th>
-              <th>Cell Sort</th>
-              <th>Laser Weld</th>
+              <th>Cell Sorting</th>
+              <th>Laser Welding</th>
               <th>BMS Mounting</th>
               <th>Final Quality Check</th>
             </tr>
@@ -130,13 +126,17 @@
 
       <section class="chartSection">
         <div class="barGraph">
-          <p class="Chartheading">Actual Quantity - FY (2025 - 2026)</p>
+          <p class="Chartheading">
+            Monthly Battery Production - FY (2025 - 2026)
+          </p>
           <div class="chart-container">
             <canvas id="barChart"></canvas>
           </div>
         </div>
         <div class="lineGraph">
-          <p class="Chartheading">Actual Quantity - FY (2025 - 2026)</p>
+          <p class="Chartheading">
+            Monthly Rework Rate (%) Trend - FY (2025 - 2026)
+          </p>
           <div class="chart-container">
             <canvas id="lineChart"></canvas>
           </div>
