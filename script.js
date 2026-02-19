@@ -1,85 +1,9 @@
-
+/* ==========================================================
+   STATE
+========================================================== */
 
 var barChart = null;
 var lineChart = null;
-
-/* ==========================================================
-   PLAN FUNCTIONS
-========================================================== */
-
-function reloadPlans() {
-    var planDateEl = document.getElementById("planDate");
-    var shiftEl = document.getElementById("shiftId");
-
-    var d = planDateEl ? planDateEl.value : null;
-    var s = shiftEl ? shiftEl.value : null;
-
-    if (!d || !s) return;
-
-    window.location.href =
-        "?date=" + encodeURIComponent(d) +
-        "&shift_id=" + encodeURIComponent(s);
-}
-
-function setKpi(p) {
-    var map = {
-        kDate: p.PlanDate + " (" + p.ShiftName + ")",
-        kTime: p.ServerTime,
-        kLine: p.LineName,
-        kModel: p.Model || "-",
-        kSfg: p.SFG_Code,
-        kTotalPlan: p.TotalPlan,
-        kTotalActual: p.TotalActual,
-        kTargetUph: p.Target_UPH,
-        kActualUph: p.ActualUPH
-    };
-
-    Object.keys(map).forEach(function (id) {
-        var el = document.getElementById(id);
-        if (el) el.innerText = map[id];
-    });
-}
-
-/* ==========================================================
-   TABLE
-========================================================== */
-
-function buildRows(rows) {
-    var body = document.getElementById("tableBody");
-    if (!body) return;
-
-    body.innerHTML = "";
-
-    if (!rows || !rows.length) {
-        body.innerHTML = "<tr><td colspan='6'>No data</td></tr>";
-        return;
-    }
-
-    rows.forEach(function (r) {
-        var tr = document.createElement("tr");
-        tr.innerHTML =
-            "<td>" + r.timing + "</td>" +
-            "<td>" + r.uph_target + "</td>" +
-            "<td>" + r["Cell Short"] + "</td>" +
-            "<td>" + r["Laser Weld"] + "</td>" +
-            "<td>" + r["BMS Mounting"] + "</td>" +
-            "<td>" + r["FQC"] + "</td>";
-        body.appendChild(tr);
-    });
-}
-
-function loadPlan(planId) {
-    fetch("?ajax=1&plan_id=" + planId, { cache: "no-store" })
-        .then(function (res) { return res.json(); })
-        .then(function (js) {
-            if (!js.ok) return;
-            setKpi(js.data.plan);
-            buildRows(js.data.rows);
-        })
-        .catch(function (err) {
-            console.error("Load plan error:", err);
-        });
-}
 
 /* ==========================================================
    UTILITIES
@@ -100,7 +24,7 @@ function responsiveFont(base) {
 }
 
 /* ==========================================================
-   CHART DATA (Dummy)
+   CHART DATA (Dummy – Replace with API later)
 ========================================================== */
 
 var barData = {
@@ -114,14 +38,18 @@ var lineData = {
 };
 
 /* ==========================================================
-   COMMON CHART OPTIONS
+   COMMON OPTIONS
 ========================================================== */
 
-function getCommonChartOptions(yTitle) {
+function getCommonOptions(yTitle, dataValues) {
+
+    var maxValue = Math.max.apply(null, dataValues);
+
     return {
         responsive: true,
         maintainAspectRatio: false,
         animation: false,
+
         plugins: {
             legend: {
                 labels: {
@@ -130,14 +58,16 @@ function getCommonChartOptions(yTitle) {
                 }
             },
             datalabels: {
+                color: cssVar("--text"),
                 anchor: "end",
                 align: "top",
-                offset: 4,
+                offset: 6,
                 clamp: true,
-                font: { size: responsiveFont(16) }
-
+                font: {
+                    size: responsiveFont(16),
+                    weight: "bold"
+                }
             }
-
         },
 
         scales: {
@@ -151,6 +81,7 @@ function getCommonChartOptions(yTitle) {
             },
             y: {
                 beginAtZero: true,
+                suggestedMax: maxValue * 1.1, 
                 ticks: {
                     color: cssVar("--text"),
                     font: { size: responsiveFont(16) }
@@ -159,99 +90,96 @@ function getCommonChartOptions(yTitle) {
                     display: true,
                     text: yTitle,
                     color: cssVar("--text"),
-                    font: { size: responsiveFont(14) }
+                    font: { size: responsiveFont(16) }
                 }
             }
         }
     };
 }
 
-/* ==========================================================
-   BUILD CHART CONFIGS
-========================================================== */
+function buildBarChart() {
 
-function buildBarChartConfig(data) {
-    var maxValue = Math.max.apply(null, data.values);
-
-    var options = getCommonChartOptions("Rework %");
-
-    options.scales.y.suggestedMax = maxValue * 1.1;
-
-    return {
-        type: "bar",
-        data: {
-            labels: data.labels,
-            datasets: [{
-                label: "Monthly Production Trend",
-                data: data.values,
-                backgroundColor: "#3b82f6",
-                borderRadius: 4
-            }]
-        },
-        options: options
-
-    };
+    return new Chart(
+        document.getElementById("barChart"),
+        {
+            type: "bar",
+            data: {
+                labels: barData.labels,
+                datasets: [{
+                    label: "Monthly Production Trend",
+                    data: barData.values,
+                    backgroundColor: "#3b82f6",
+                    borderRadius: 4
+                }]
+            },
+            options: getCommonOptions("Hundreds", barData.values)
+        }
+    );
 }
 
-function buildLineChartConfig(data) {
 
-    var maxValue = Math.max.apply(null, data.values);
+function buildLineChart() {
 
-    var options = getCommonChartOptions("Rework %");
-
-    options.scales.y.suggestedMax = maxValue * 1.1;
-
-    return {
-        type: "line",
-        data: {
-            labels: data.labels,
-            datasets: [{
-                label: "Rework Percentage(%) Trend",
-                data: data.values,
-                borderColor: "#e63946",
-                backgroundColor: "rgba(230,57,70,0.15)",
-                pointBackgroundColor: "#e63946",
-                pointRadius: 4,
-                borderWidth: 2,
-                tension: 0.35,
-                fill: true
-            }]
-        },
-        options: options
-    };
+    return new Chart(
+        document.getElementById("lineChart"),
+        {
+            type: "line",
+            data: {
+                labels: lineData.labels,
+                datasets: [{
+                    label: "Rework Percentage (%) Trend",
+                    data: lineData.values,
+                    borderColor: "#e63946",
+                    backgroundColor: "rgba(230,57,70,0.15)",
+                    pointBackgroundColor: "#e63946",
+                    pointBorderColor: "#e63946",
+                    pointRadius: 4,
+                    borderWidth: 2,
+                    tension: 0.35,
+                    fill: true
+                }]
+            },
+            options: getCommonOptions("Rework %", lineData.values)
+        }
+    );
 }
-
 
 /* ==========================================================
    INIT CHARTS
 ========================================================== */
 
 function initCharts() {
-    var barCtx = document.getElementById("barChart");
-    var lineCtx = document.getElementById("lineChart");
 
-    if (!barCtx || !lineCtx) return;
+    var barCanvas = document.getElementById("barChart");
+    var lineCanvas = document.getElementById("lineChart");
 
-    barChart = new Chart(barCtx, buildBarChartConfig(barData));
-    lineChart = new Chart(lineCtx, buildLineChartConfig(lineData));
+    if (!barCanvas || !lineCanvas) return;
+
+    barChart = buildBarChart();
+    lineChart = buildLineChart();
 }
 
 /* ==========================================================
    THEME HANDLING
 ========================================================== */
 
-function refreshCharts() {
+function updateChartTheme() {
+
     if (!barChart || !lineChart) return;
 
-    barChart.options = getCommonChartOptions("Hundred");
-    lineChart.options = getCommonChartOptions("Efficiency %");
+    // update only colors + scales
+    barChart.options = getCommonOptions("Units Produced", barData.values);
+    lineChart.options = getCommonOptions("Rework %", lineData.values);
 
     barChart.update();
     lineChart.update();
 }
 
 function setupTheme() {
+
     var toggleBtn = document.getElementById("themeToggle");
+    if (!toggleBtn) return;
+
     var saved = localStorage.getItem("dashboard-theme");
 
     if (saved === "dark") {
@@ -260,6 +188,7 @@ function setupTheme() {
     }
 
     toggleBtn.addEventListener("click", function () {
+
         var isDark =
             document.documentElement.getAttribute("data-theme") === "dark";
 
@@ -276,12 +205,12 @@ function setupTheme() {
             isDark ? "light" : "dark"
         );
 
-        refreshCharts();
+        updateChartTheme();
     });
 }
 
 /* ==========================================================
-   REGISTER PLUGIN (IMPORTANT FOR LG)
+   REGISTER DATALABELS (Important for LG browser)
 ========================================================== */
 
 if (typeof ChartDataLabels !== "undefined") {
@@ -293,6 +222,8 @@ if (typeof ChartDataLabels !== "undefined") {
 ========================================================== */
 
 document.addEventListener("DOMContentLoaded", function () {
+
     initCharts();
     setupTheme();
+
 });
