@@ -126,24 +126,25 @@ function getCommonChartOptions(yTitle) {
             legend: {
                 labels: {
                     color: cssVar("--text"),
-                    font: { size: responsiveFont(12) }
+                    font: { size: responsiveFont(16) }
                 }
             },
             datalabels: {
-                color: cssVar("--text"),
-                font: { size: responsiveFont(14) },
                 anchor: "end",
                 align: "top",
-                offset: 2,
-                clamp: true
+                offset: 4,
+                clamp: true,
+                font: { size: responsiveFont(16) }
+
             }
+
         },
 
         scales: {
             x: {
                 ticks: {
                     color: cssVar("--text"),
-                    font: { size: responsiveFont(14) },
+                    font: { size: responsiveFont(16) },
                     maxRotation: 0,
                     minRotation: 0
                 }
@@ -152,7 +153,7 @@ function getCommonChartOptions(yTitle) {
                 beginAtZero: true,
                 ticks: {
                     color: cssVar("--text"),
-                    font: { size: responsiveFont(14) }
+                    font: { size: responsiveFont(16) }
                 },
                 title: {
                     display: true,
@@ -170,6 +171,12 @@ function getCommonChartOptions(yTitle) {
 ========================================================== */
 
 function buildBarChartConfig(data) {
+    var maxValue = Math.max.apply(null, data.values);
+
+    var options = getCommonChartOptions("Rework %");
+
+    options.scales.y.suggestedMax = maxValue * 1.1;
+
     return {
         type: "bar",
         data: {
@@ -181,33 +188,39 @@ function buildBarChartConfig(data) {
                 borderRadius: 4
             }]
         },
-        options: getCommonChartOptions("Hundreds")
+        options: options
 
     };
 }
 
 function buildLineChartConfig(data) {
+
+    var maxValue = Math.max.apply(null, data.values);
+
+    var options = getCommonChartOptions("Rework %");
+
+    options.scales.y.suggestedMax = maxValue * 1.1;
+
     return {
         type: "line",
         data: {
             labels: data.labels,
             datasets: [{
-                label: "Rework Percentage Trend",
+                label: "Rework Percentage(%) Trend",
                 data: data.values,
                 borderColor: "#e63946",
                 backgroundColor: "rgba(230,57,70,0.15)",
                 pointBackgroundColor: "#e63946",
-                pointBorderColor: "#e63946",
                 pointRadius: 4,
                 borderWidth: 2,
                 tension: 0.35,
-                fill: true,
+                fill: true
             }]
         },
-
-        options: getCommonChartOptions("Rework %")
+        options: options
     };
 }
+
 
 /* ==========================================================
    INIT CHARTS

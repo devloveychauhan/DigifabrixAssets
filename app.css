@@ -61,7 +61,8 @@ body {
 
 header h1 {
   text-align: center;
-  font-size: clamp(1.5rem, 2vw, 2.4rem);
+  font-size: clamp(1.5rem, 2vw, 2.6rem);
+  padding-bottom: 8px;
   font-weight: 800;
 color: var(--brand-orange);
 }
@@ -72,7 +73,7 @@ color: var(--brand-orange);
 
 .alert {
   padding: 8px 12px;
-  font-size: 0.95rem;
+  font-size: 1rem;
   border-radius: 6px;
   background: #ffe5e5;
   color: #dc2626;
@@ -103,14 +104,15 @@ color: var(--brand-orange);
 }
 
 .kpi-label {
-  font-size: clamp(0.6rem, 1.2vw);
+  font-size: 20px;
   text-transform: uppercase;
   margin-bottom: 4px;
+  font-weight: 600;
 }
 
 .kpi-value {
-  font-size: clamp(0.4rem, 1vw);
-  font-weight: 700;
+  font-size: 18px;
+  font-weight: 600;
   overflow-wrap: break-word;
 }
 
@@ -132,7 +134,7 @@ color: var(--brand-orange);
   border-radius: 8px;
   border: 1px solid var(--border);
   overflow: hidden;
-  min-height: 20vh; /* Reduced from 22vh → gives even more space to charts */
+  min-height: 22vh; /* Reduced from 22vh → gives even more space to charts */
 }
 
 table.dash-table {
@@ -145,7 +147,7 @@ table.dash-table th {
   background: var(--accent);
   color: #fff;
   padding: 8px 10px;
-  font-size: 0.78rem;
+  font-size: 1rem;
   font-weight: 600;
   position: sticky;
   top: 0;
@@ -182,9 +184,9 @@ table.dash-table td {
 
 .Chartheading {
   text-align: center;
-  font-size: 0.5rem;
+  font-size: 1rem;
   font-weight: 600;
-  margin-bottom: 4px;
+  margin-bottom: 16px;
   flex: 0 0 auto;
 }
 
@@ -209,10 +211,10 @@ table.dash-table td {
 ===================================================== */
 
 .logo{
-  width: 150px;
+  width: 180px;
   position: fixed;
-  top: 5;
-  left: 10;
+  
+
 }
 .theme-toggle {
   position: fixed;
@@ -288,7 +290,7 @@ table.dash-table td {
 
   table.dash-table th,
   table.dash-table td {
-    font-size: 1rem;
+    font-size: 1.4rem;
     padding: 9px 12px;
   }
 
@@ -297,6 +299,6 @@ table.dash-table td {
   }
 
   .Chartheading {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
   }
 }
