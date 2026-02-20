@@ -1,9 +1,6 @@
 let barChart = null;
 let lineChart = null;
 
-/* ==========================================================
-   UTILITIES
-========================================================== */
 
 function cssVar(name) {
     return getComputedStyle(document.documentElement)
@@ -36,10 +33,9 @@ function generateDayLabels(year, month) {
 
 let today = new Date();
 let currentYear = today.getFullYear();
-// let currentMonth = today.getMonth() + 1;
-// console.log(currentMonth)
+let currentMonth = today.getMonth() + 1;
 
-let dailyLabels = generateDayLabels(currentYear, 0);
+let dailyLabels = generateDayLabels(currentYear, currentMonth);
 
 
 let dailyProductionValues = [];
@@ -118,9 +114,6 @@ function getCommonOptions(yTitle, minVal, maxVal, stepSize) {
     };
 }
 
-/* ==========================================================
-   BUILD DAILY PRODUCTION (BAR)
-========================================================== */
 
 function buildDailyProductionChart() {
     return new Chart(
@@ -146,9 +139,6 @@ function buildDailyProductionChart() {
     );
 }
 
-/* ==========================================================
-   BUILD DAILY REWORK (LINE)
-========================================================== */
 
 function buildDailyReworkChart() {
     return new Chart(
@@ -172,7 +162,7 @@ function buildDailyReworkChart() {
             options: getCommonOptions(
                 "Rework %",
                 0,
-                20,   // adjust if needed
+                25,   // adjust if needed
                 2
             )
         }
