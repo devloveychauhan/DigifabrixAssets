@@ -167,7 +167,7 @@ function buildDailyReworkChart() {
                 "Rework %",
                 0,
                 24,
-                2,false
+                2, false
             )
         }
     );
@@ -192,7 +192,7 @@ function initCharts() {
 function updateThemeCharts() {
     if (!barChart || !lineChart) return;
 
-    barChart.options = getCommonOptions("Production Count", 0, 1600, 200, true);
+    barChart.options = getCommonOptions("Units ", 0, 1600, 200, true);
     lineChart.options = getCommonOptions("Rework %", 0, 20, 2, false);
 
     barChart.update();
