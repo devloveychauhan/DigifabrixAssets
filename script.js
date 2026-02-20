@@ -60,7 +60,7 @@ function getReworkColor(values) {
 }
 
 
-function getCommonOptions(yTitle, minVal, maxVal, stepSize) {
+function getCommonOptions(yTitle, minVal, maxVal, stepSize, isBar) {
     return {
         responsive: true,
         maintainAspectRatio: false,
@@ -79,6 +79,8 @@ function getCommonOptions(yTitle, minVal, maxVal, stepSize) {
                 align: "top",
                 offset: 4,
                 clamp: true,
+                rotation: isBar ? -90 : 0,
+
                 font: {
                     size: responsiveFont(16),
                     weight: "bold"
@@ -126,14 +128,16 @@ function buildDailyProductionChart() {
                     label: "Daily Battery Production",
                     data: dailyProductionValues,
                     backgroundColor: "#3b82f6",
-                    borderRadius: 3
+                    borderRadius: 3,
                 }]
             },
             options: getCommonOptions(
                 "Units",
                 0,
-                1600,   // fixed max
-                200     // interval
+                1800,   // fixed max
+                200,
+                true     // interval,
+
             )
         }
     );
@@ -162,16 +166,13 @@ function buildDailyReworkChart() {
             options: getCommonOptions(
                 "Rework %",
                 0,
-                25,   // adjust if needed
-                2
+                24,
+                2,false
             )
         }
     );
 }
 
-/* ==========================================================
-   INIT
-========================================================== */
 
 function initCharts() {
 
@@ -191,8 +192,8 @@ function initCharts() {
 function updateThemeCharts() {
     if (!barChart || !lineChart) return;
 
-    barChart.options = getCommonOptions("Production Count", 0, 1600, 200);
-    lineChart.options = getCommonOptions("Rework %", 0, 20, 2);
+    barChart.options = getCommonOptions("Production Count", 0, 1600, 200, true);
+    lineChart.options = getCommonOptions("Rework %", 0, 20, 2, false);
 
     barChart.update();
     lineChart.update();
