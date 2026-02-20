@@ -134,15 +134,24 @@ color: var(--brand-orange);
   border-radius: 8px;
   border: 1px solid var(--border);
   overflow: hidden;
-  min-height: 22vh; /* Reduced from 22vh → gives even more space to charts */
+  height: 22vh; /* Reduced from 22vh → gives even more space to charts */
+
 }
 
 table.dash-table {
   width: 100%;
+  height: 100%;
   border-collapse: collapse;
-  table-layout: auto;
+  table-layout: fixed;
 }
 
+table.dash-table tbody {
+  height: 100%;
+}
+
+table.dash-table tbody tr {
+  height: auto;
+}
 table.dash-table th {
   background: var(--accent);
   color: #fff;
@@ -157,12 +166,15 @@ table.dash-table th {
 }
 
 table.dash-table td {
-  padding: 7px 10px;
-  font-size: 2rem;
+   padding: 12px 10px;
+  font-size: clamp(1.2rem, 2vw, 1.8rem);
   border-bottom: 1px solid var(--border);
   text-align: center;
 }
 
+table.dash-table tbody tr:last-child td {
+  border-bottom: none;
+}
 /* =====================================================
    CHART SECTION (MAXIMIZED VISIBILITY ON 43" DISPLAY)
 ===================================================== */
